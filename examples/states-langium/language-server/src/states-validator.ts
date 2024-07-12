@@ -14,19 +14,47 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import { AstNode, DiagnosticInfo, MultiMap, ValidationAcceptor, ValidationChecks } from 'langium';
-import { StatesAstType, State, Transition, StateMachine } from './generated/ast.js';
+import { AstNode, AstUtils,
+    // DiagnosticInfo, MultiMap,
+    ValidationAcceptor, ValidationChecks, ValidationRegistry } from 'langium';
+// import { StatesAstType, State, Transition, StateMachine } from './generated/ast.js';
+import { BinaryExpression, Class, ExpressionBlock, FunctionDeclaration, isReturnStatement,
+    StatesAstType, MethodMember, TypeReference, UnaryExpression, VariableDeclaration } from './generated/ast.js';
 import { StatesServices } from './states-module.js';
 
-export function registerValidationChecks(services: StatesServices) {
-    const registry = services.validation.ValidationRegistry;
-    const validator = services.validation.StatesValidator;
-    const checks: ValidationChecks<StatesAstType> = {
-        State: validator.checkState,
-        StateMachine: validator.checkUniqueNames,
-        Transition: validator.checkTransition
-    };
-    registry.register(checks, validator);
+import { isAssignable } from './type-system/assignment.js';
+import { isVoidType, TypeDescription, typeToString } from './type-system/descriptions.js';
+import { inferType } from './type-system/infer.js';
+import { isLegalOperation } from './type-system/operator.js';
+
+
+// export function registerValidationChecks(services: StatesServices) {
+//     const registry = services.validation.ValidationRegistry;
+//     const validator = services.validation.StatesValidator;
+//     const checks: ValidationChecks<StatesAstType> = {
+//         State: validator.checkState,
+//         StateMachine: validator.checkUniqueNames,
+//         Transition: validator.checkTransition
+//     };
+//     registry.register(checks, validator);
+// }
+/**
+ * Registry for validation checks.
+ */
+export class LoxValidationRegistry extends ValidationRegistry {
+    constructor(services: StatesServices) {
+        super(services);
+        const validator = services.validation.StatesValidator;
+        const checks: ValidationChecks<StatesAstType> = {
+            BinaryExpression: validator.checkBinaryOperationAllowed,
+            UnaryExpression: validator.checkUnaryOperationAllowed,
+            VariableDeclaration: validator.checkVariableDeclaration,
+            MethodMember: validator.checkMethodReturnType,
+            Class: validator.checkClassDeclaration,
+            FunctionDeclaration: validator.checkFunctionReturnType
+        };
+        this.register(checks, validator);
+    }
 }
 
 /**
@@ -34,58 +62,97 @@ export function registerValidationChecks(services: StatesServices) {
  */
 export class StatesValidator {
 
-    checkState(state: State, accept: ValidationAcceptor): void {
-        const event2transition = new MultiMap<string, Transition>();
-        for (const transition of state.transitions) {
-            if (transition.event.ref?.name) {
-                event2transition.add(transition.event.ref.name, transition);
-            }
+    checkFunctionReturnType(func: FunctionDeclaration, accept: ValidationAcceptor): void {
+        this.checkFunctionReturnTypeInternal(func.body, func.returnType, accept);
+    }
+
+    checkMethodReturnType(method: MethodMember, accept: ValidationAcceptor): void {
+        this.checkFunctionReturnTypeInternal(method.body, method.returnType, accept);
+    }
+
+    // TODO: implement classes
+    checkClassDeclaration(declaration: Class, accept: ValidationAcceptor): void {
+        accept('error', 'Classes are currently unsupported.', {
+            node: declaration,
+            property: 'name'
+        });
+    }
+
+    private checkFunctionReturnTypeInternal(body: ExpressionBlock, returnType: TypeReference, accept: ValidationAcceptor): void {
+        const map = this.getTypeCache();
+        const returnStatements = AstUtils.streamAllContents(body).filter(isReturnStatement).toArray();
+        const expectedType = inferType(returnType, map);
+        if (returnStatements.length === 0 && !isVoidType(expectedType)) {
+            accept('error', "A function whose declared type is not 'void' must return a value.", {
+                node: returnType
+            });
+            return;
         }
-        for (const name of event2transition.keys()) {
-            const transitionsWithCommonName = event2transition.get(name);
-            if (transitionsWithCommonName.length > 1) {
-                for (const transition of transitionsWithCommonName) {
-                    accept('error', `Multiple transitions on event ${name}`, { node: transition, property: 'event' });
-                }
+        for (const returnStatement of returnStatements) {
+            const returnValueType = inferType(returnStatement, map);
+            if (!isAssignable(returnValueType, expectedType)) {
+                accept('error', `Type '${typeToString(returnValueType)}' is not assignable to type '${typeToString(expectedType)}'.`, {
+                    node: returnStatement
+                });
             }
         }
     }
 
-    checkUniqueNames(sm: StateMachine, accept: ValidationAcceptor): void {
-        this.genericUniqueCheck(sm.states, accept, 'states');
-        this.genericUniqueCheck(sm.events, accept, 'events');
-    }
-
-    protected genericUniqueCheck<T extends AstNode & { name: string }>(nodes: T[], accept: ValidationAcceptor, what: string) {
-        const name2node = new MultiMap<string, T>();
-        for (const node of nodes) {
-            if (node.name) {
-                name2node.add(node.name, node);
+    checkVariableDeclaration(decl: VariableDeclaration, accept: ValidationAcceptor): void {
+        if (decl.type && decl.value) {
+            const map = this.getTypeCache();
+            const left = inferType(decl.type, map);
+            const right = inferType(decl.value, map);
+            if (!isAssignable(right, left)) {
+                accept('error', `Type '${typeToString(right)}' is not assignable to type '${typeToString(left)}'.`, {
+                    node: decl,
+                    property: 'value'
+                });
             }
-        }
-        for (const name of name2node.keys()) {
-            const nodesWithCommonName = name2node.get(name);
-            if (nodesWithCommonName.length > 1) {
-                for (const node of nodesWithCommonName) {
-                    accept('error', `Multiple ${what} named '${name}'`, <DiagnosticInfo<T>>{ node: node, property: 'name' });
-                }
-            }
+        } else if (!decl.type && !decl.value) {
+            accept('error', 'Variables require a type hint or an assignment at creation', {
+                node: decl,
+                property: 'name'
+            });
         }
     }
 
-    checkTransition(transition: Transition, accept: ValidationAcceptor): void {
-        const target = transition.state.ref;
-        if (target) {
-            const sourceSM = transition.$container.$container;
-            const targetSM = target.$container;
-            if (sourceSM !== targetSM) {
-                accept(
-                    'error',
-                    `Invalid transition target: state ${target.name} is in a different state machine ${targetSM.name}.`,
-                    { node: transition, property: 'state' }
-                );
+    checkBinaryOperationAllowed(binary: BinaryExpression, accept: ValidationAcceptor): void {
+        const map = this.getTypeCache();
+        const left = inferType(binary.left, map);
+        const right = inferType(binary.right, map);
+        if (!isLegalOperation(binary.operator, left, right)) {
+            accept('error', `Cannot perform operation '${binary.operator}' on values of type '${typeToString(left)}' and '${typeToString(right)}'.`, {
+                node: binary
+            });
+        } else if (binary.operator === '=') {
+            if (!isAssignable(right, left)) {
+                accept('error', `Type '${typeToString(right)}' is not assignable to type '${typeToString(left)}'.`, {
+                    node: binary,
+                    property: 'right'
+                });
+            }
+        } else if (['==', '!='].includes(binary.operator)) {
+            if (!isAssignable(right, left)) {
+                accept('warning', `This comparison will always return '${binary.operator === '==' ? 'false' : 'true'}' as types '${typeToString(left)}' and '${typeToString(right)}' are not compatible.`, {
+                    node: binary,
+                    property: 'operator'
+                });
             }
         }
+    }
+
+    checkUnaryOperationAllowed(unary: UnaryExpression, accept: ValidationAcceptor): void {
+        const item = inferType(unary.value, this.getTypeCache());
+        if (!isLegalOperation(unary.operator, item)) {
+            accept('error', `Cannot perform operation '${unary.operator}' on value of type '${typeToString(item)}'.`, {
+                node: unary
+            });
+        }
+    }
+
+    private getTypeCache(): Map<AstNode, TypeDescription> {
+        return new Map();
     }
 
 }

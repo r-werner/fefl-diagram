@@ -15,27 +15,38 @@
  ********************************************************************************/
 
 import { GeneratorContext, LangiumDiagramGenerator } from 'langium-sprotty';
-import { SEdge, SLabel, SModelRoot, SNode, SPort } from 'sprotty-protocol';
-import { State, StateMachine, Transition } from './generated/ast.js';
+import {
+    // SEdge,
+    SLabel, SModelRoot, SNode, SPort } from 'sprotty-protocol';
+import {
+    // LoxElement,
+    // State,
+    LoxProgram,
+    isFunctionDeclaration,
+    FunctionDeclaration,
+    // Transition
+} from './generated/ast.js';
 
 export class StatesDiagramGenerator extends LangiumDiagramGenerator {
 
-    protected generateRoot(args: GeneratorContext<StateMachine>): SModelRoot {
+    protected generateRoot(args: GeneratorContext<LoxProgram>): SModelRoot {
         const { document } = args;
         const sm = document.parseResult.value;
         const graph = {
             type: 'graph',
-            id: sm.name ?? 'root',
+            id: 'LoxProgram' + sm.elements.length ?? 'root',
+            // id: sm.name ?? 'root',
             children: [
-                ...sm.states.map(s => this.generateNode(s, args)),
-                ...sm.states.flatMap(s => s.transitions).map(t => this.generateEdge(t, args))
+                ...sm.elements.filter(s => isFunctionDeclaration(s))
+                .map(s => this.generateNode(s as FunctionDeclaration, args)),
+                // ...sm.elements.flatMap(s => s.transitions).map(t => this.generateEdge(t, args))
             ]
         };
         this.traceProvider.trace(graph, sm);
         return graph;
     }
 
-    protected generateNode(state: State, ctx: GeneratorContext<StateMachine>): SNode {
+    protected generateNode(state: FunctionDeclaration, ctx: GeneratorContext<LoxProgram>): SNode {
         const { idCache } = ctx;
         const nodeId = idCache.uniqueId(state.name, state);
         const label: SLabel = {
@@ -67,7 +78,8 @@ export class StatesDiagramGenerator extends LangiumDiagramGenerator {
         return node;
     }
 
-    protected generateEdge(transition: Transition, ctx: GeneratorContext<StateMachine>): SEdge {
+    /*
+    protected generateEdge(transition: Transition, ctx: GeneratorContext<LoxProgram>): SEdge {
         const { idCache } = ctx;
         const sourceId = idCache.getId(transition.$container);
         const targetId = idCache.getId(transition.state?.ref);
@@ -91,5 +103,5 @@ export class StatesDiagramGenerator extends LangiumDiagramGenerator {
         this.markerProvider.addDiagnosticMarker(edge, transition, ctx);
         return edge;
     }
-
+*/
 }

@@ -10,76 +10,404 @@ import { AbstractAstReflection } from 'langium';
 export const StatesTerminals = {
     WS: /\s+/,
     ID: /[_a-zA-Z][\w_]*/,
+    NUMBER: /[0-9]+(\.[0-9]+)?/,
+    STRING: /"[^"]*"/,
     ML_COMMENT: /\/\*[\s\S]*?\*\//,
     SL_COMMENT: /\/\/[^\n\r]*/,
 };
 
-export interface Event extends AstNode {
-    readonly $container: StateMachine;
-    readonly $type: 'Event';
+export type ClassMember = FieldMember | MethodMember;
+
+export const ClassMember = 'ClassMember';
+
+export function isClassMember(item: unknown): item is ClassMember {
+    return reflection.isInstance(item, ClassMember);
+}
+
+export type Expression = BinaryExpression | BooleanExpression | MemberCall | NilExpression | NumberExpression | StringExpression | UnaryExpression;
+
+export const Expression = 'Expression';
+
+export function isExpression(item: unknown): item is Expression {
+    return reflection.isInstance(item, Expression);
+}
+
+export type LoxElement = Class | Expression | ExpressionBlock | ForStatement | FunctionDeclaration | IfStatement | NamedElement | PrintStatement | ReturnStatement | WhileStatement;
+
+export const LoxElement = 'LoxElement';
+
+export function isLoxElement(item: unknown): item is LoxElement {
+    return reflection.isInstance(item, LoxElement);
+}
+
+export type NamedElement = Class | FieldMember | FunctionDeclaration | MethodMember | Parameter | VariableDeclaration;
+
+export const NamedElement = 'NamedElement';
+
+export function isNamedElement(item: unknown): item is NamedElement {
+    return reflection.isInstance(item, NamedElement);
+}
+
+export interface BinaryExpression extends AstNode {
+    readonly $container: BinaryExpression | ExpressionBlock | ForStatement | IfStatement | LoxProgram | MemberCall | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
+    readonly $type: 'BinaryExpression';
+    left: Expression;
+    operator: '!=' | '*' | '+' | '-' | '/' | '<' | '<=' | '=' | '==' | '>' | '>=' | 'and' | 'or';
+    right: Expression;
+}
+
+export const BinaryExpression = 'BinaryExpression';
+
+export function isBinaryExpression(item: unknown): item is BinaryExpression {
+    return reflection.isInstance(item, BinaryExpression);
+}
+
+export interface BooleanExpression extends AstNode {
+    readonly $container: BinaryExpression | ExpressionBlock | ForStatement | IfStatement | LoxProgram | MemberCall | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
+    readonly $type: 'BooleanExpression';
+    value: boolean;
+}
+
+export const BooleanExpression = 'BooleanExpression';
+
+export function isBooleanExpression(item: unknown): item is BooleanExpression {
+    return reflection.isInstance(item, BooleanExpression);
+}
+
+export interface Class extends AstNode {
+    readonly $container: ExpressionBlock | ForStatement | LoxProgram;
+    readonly $type: 'Class';
+    members: Array<ClassMember>;
     name: string;
+    superClass?: Reference<Class>;
 }
 
-export const Event = 'Event';
+export const Class = 'Class';
 
-export function isEvent(item: unknown): item is Event {
-    return reflection.isInstance(item, Event);
+export function isClass(item: unknown): item is Class {
+    return reflection.isInstance(item, Class);
 }
 
-export interface State extends AstNode {
-    readonly $container: StateMachine;
-    readonly $type: 'State';
+export interface ExpressionBlock extends AstNode {
+    readonly $container: ExpressionBlock | ForStatement | FunctionDeclaration | IfStatement | LoxProgram | MethodMember | WhileStatement;
+    readonly $type: 'ExpressionBlock';
+    elements: Array<LoxElement>;
+}
+
+export const ExpressionBlock = 'ExpressionBlock';
+
+export function isExpressionBlock(item: unknown): item is ExpressionBlock {
+    return reflection.isInstance(item, ExpressionBlock);
+}
+
+export interface FieldMember extends AstNode {
+    readonly $container: Class | ExpressionBlock | ForStatement | LoxProgram;
+    readonly $type: 'FieldMember';
     name: string;
-    transitions: Array<Transition>;
+    type: TypeReference;
 }
 
-export const State = 'State';
+export const FieldMember = 'FieldMember';
 
-export function isState(item: unknown): item is State {
-    return reflection.isInstance(item, State);
+export function isFieldMember(item: unknown): item is FieldMember {
+    return reflection.isInstance(item, FieldMember);
 }
 
-export interface StateMachine extends AstNode {
-    readonly $type: 'StateMachine';
-    events: Array<Event>;
+export interface ForStatement extends AstNode {
+    readonly $container: ExpressionBlock | LoxProgram;
+    readonly $type: 'ForStatement';
+    block: ExpressionBlock;
+    condition?: Expression;
+    counter?: NamedElement;
+    execution?: Expression;
+}
+
+export const ForStatement = 'ForStatement';
+
+export function isForStatement(item: unknown): item is ForStatement {
+    return reflection.isInstance(item, ForStatement);
+}
+
+export interface FunctionDeclaration extends AstNode {
+    readonly $container: ExpressionBlock | ForStatement | LoxProgram;
+    readonly $type: 'FunctionDeclaration';
+    body: ExpressionBlock;
     name: string;
-    states: Array<State>;
+    parameters: Array<Parameter>;
+    returnType: TypeReference;
 }
 
-export const StateMachine = 'StateMachine';
+export const FunctionDeclaration = 'FunctionDeclaration';
 
-export function isStateMachine(item: unknown): item is StateMachine {
-    return reflection.isInstance(item, StateMachine);
+export function isFunctionDeclaration(item: unknown): item is FunctionDeclaration {
+    return reflection.isInstance(item, FunctionDeclaration);
 }
 
-export interface Transition extends AstNode {
-    readonly $container: State;
-    readonly $type: 'Transition';
-    event: Reference<Event>;
-    state: Reference<State>;
+export interface IfStatement extends AstNode {
+    readonly $container: ExpressionBlock | LoxProgram;
+    readonly $type: 'IfStatement';
+    block: ExpressionBlock;
+    condition: Expression;
+    elseBlock?: ExpressionBlock;
 }
 
-export const Transition = 'Transition';
+export const IfStatement = 'IfStatement';
 
-export function isTransition(item: unknown): item is Transition {
-    return reflection.isInstance(item, Transition);
+export function isIfStatement(item: unknown): item is IfStatement {
+    return reflection.isInstance(item, IfStatement);
+}
+
+export interface LambdaParameter extends AstNode {
+    readonly $container: TypeReference;
+    readonly $type: 'LambdaParameter';
+    name?: string;
+    type: TypeReference;
+}
+
+export const LambdaParameter = 'LambdaParameter';
+
+export function isLambdaParameter(item: unknown): item is LambdaParameter {
+    return reflection.isInstance(item, LambdaParameter);
+}
+
+export interface LoxProgram extends AstNode {
+    readonly $type: 'LoxProgram';
+    elements: Array<LoxElement>;
+}
+
+export const LoxProgram = 'LoxProgram';
+
+export function isLoxProgram(item: unknown): item is LoxProgram {
+    return reflection.isInstance(item, LoxProgram);
+}
+
+export interface MemberCall extends AstNode {
+    readonly $container: BinaryExpression | ExpressionBlock | ForStatement | IfStatement | LoxProgram | MemberCall | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
+    readonly $type: 'MemberCall';
+    arguments: Array<Expression>;
+    element?: Reference<NamedElement>;
+    explicitOperationCall: boolean;
+    previous?: Expression;
+}
+
+export const MemberCall = 'MemberCall';
+
+export function isMemberCall(item: unknown): item is MemberCall {
+    return reflection.isInstance(item, MemberCall);
+}
+
+export interface MethodMember extends AstNode {
+    readonly $container: Class | ExpressionBlock | ForStatement | LoxProgram;
+    readonly $type: 'MethodMember';
+    body: ExpressionBlock;
+    name: string;
+    parameters: Array<Parameter>;
+    returnType: TypeReference;
+}
+
+export const MethodMember = 'MethodMember';
+
+export function isMethodMember(item: unknown): item is MethodMember {
+    return reflection.isInstance(item, MethodMember);
+}
+
+export interface NilExpression extends AstNode {
+    readonly $container: BinaryExpression | ExpressionBlock | ForStatement | IfStatement | LoxProgram | MemberCall | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
+    readonly $type: 'NilExpression';
+    value: 'nil';
+}
+
+export const NilExpression = 'NilExpression';
+
+export function isNilExpression(item: unknown): item is NilExpression {
+    return reflection.isInstance(item, NilExpression);
+}
+
+export interface NumberExpression extends AstNode {
+    readonly $container: BinaryExpression | ExpressionBlock | ForStatement | IfStatement | LoxProgram | MemberCall | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
+    readonly $type: 'NumberExpression';
+    value: number;
+}
+
+export const NumberExpression = 'NumberExpression';
+
+export function isNumberExpression(item: unknown): item is NumberExpression {
+    return reflection.isInstance(item, NumberExpression);
+}
+
+export interface Parameter extends AstNode {
+    readonly $container: ExpressionBlock | ForStatement | FunctionDeclaration | LoxProgram | MethodMember;
+    readonly $type: 'Parameter';
+    name: string;
+    type: TypeReference;
+}
+
+export const Parameter = 'Parameter';
+
+export function isParameter(item: unknown): item is Parameter {
+    return reflection.isInstance(item, Parameter);
+}
+
+export interface PrintStatement extends AstNode {
+    readonly $container: ExpressionBlock | LoxProgram;
+    readonly $type: 'PrintStatement';
+    value: Expression;
+}
+
+export const PrintStatement = 'PrintStatement';
+
+export function isPrintStatement(item: unknown): item is PrintStatement {
+    return reflection.isInstance(item, PrintStatement);
+}
+
+export interface ReturnStatement extends AstNode {
+    readonly $container: ExpressionBlock | LoxProgram;
+    readonly $type: 'ReturnStatement';
+    value?: Expression;
+}
+
+export const ReturnStatement = 'ReturnStatement';
+
+export function isReturnStatement(item: unknown): item is ReturnStatement {
+    return reflection.isInstance(item, ReturnStatement);
+}
+
+export interface StringExpression extends AstNode {
+    readonly $container: BinaryExpression | ExpressionBlock | ForStatement | IfStatement | LoxProgram | MemberCall | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
+    readonly $type: 'StringExpression';
+    value: string;
+}
+
+export const StringExpression = 'StringExpression';
+
+export function isStringExpression(item: unknown): item is StringExpression {
+    return reflection.isInstance(item, StringExpression);
+}
+
+export interface TypeReference extends AstNode {
+    readonly $container: FieldMember | FunctionDeclaration | LambdaParameter | MethodMember | Parameter | TypeReference | VariableDeclaration;
+    readonly $type: 'TypeReference';
+    parameters: Array<LambdaParameter>;
+    primitive?: 'boolean' | 'number' | 'string' | 'void';
+    reference?: Reference<Class>;
+    returnType?: TypeReference;
+}
+
+export const TypeReference = 'TypeReference';
+
+export function isTypeReference(item: unknown): item is TypeReference {
+    return reflection.isInstance(item, TypeReference);
+}
+
+export interface UnaryExpression extends AstNode {
+    readonly $container: BinaryExpression | ExpressionBlock | ForStatement | IfStatement | LoxProgram | MemberCall | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
+    readonly $type: 'UnaryExpression';
+    operator: '!' | '+' | '-';
+    value: Expression;
+}
+
+export const UnaryExpression = 'UnaryExpression';
+
+export function isUnaryExpression(item: unknown): item is UnaryExpression {
+    return reflection.isInstance(item, UnaryExpression);
+}
+
+export interface VariableDeclaration extends AstNode {
+    readonly $container: ExpressionBlock | ForStatement | LoxProgram;
+    readonly $type: 'VariableDeclaration';
+    assignment: boolean;
+    name: string;
+    type?: TypeReference;
+    value?: Expression;
+}
+
+export const VariableDeclaration = 'VariableDeclaration';
+
+export function isVariableDeclaration(item: unknown): item is VariableDeclaration {
+    return reflection.isInstance(item, VariableDeclaration);
+}
+
+export interface WhileStatement extends AstNode {
+    readonly $container: ExpressionBlock | LoxProgram;
+    readonly $type: 'WhileStatement';
+    block: ExpressionBlock;
+    condition: Expression;
+}
+
+export const WhileStatement = 'WhileStatement';
+
+export function isWhileStatement(item: unknown): item is WhileStatement {
+    return reflection.isInstance(item, WhileStatement);
 }
 
 export type StatesAstType = {
-    Event: Event
-    State: State
-    StateMachine: StateMachine
-    Transition: Transition
+    BinaryExpression: BinaryExpression
+    BooleanExpression: BooleanExpression
+    Class: Class
+    ClassMember: ClassMember
+    Expression: Expression
+    ExpressionBlock: ExpressionBlock
+    FieldMember: FieldMember
+    ForStatement: ForStatement
+    FunctionDeclaration: FunctionDeclaration
+    IfStatement: IfStatement
+    LambdaParameter: LambdaParameter
+    LoxElement: LoxElement
+    LoxProgram: LoxProgram
+    MemberCall: MemberCall
+    MethodMember: MethodMember
+    NamedElement: NamedElement
+    NilExpression: NilExpression
+    NumberExpression: NumberExpression
+    Parameter: Parameter
+    PrintStatement: PrintStatement
+    ReturnStatement: ReturnStatement
+    StringExpression: StringExpression
+    TypeReference: TypeReference
+    UnaryExpression: UnaryExpression
+    VariableDeclaration: VariableDeclaration
+    WhileStatement: WhileStatement
 }
 
 export class StatesAstReflection extends AbstractAstReflection {
 
     getAllTypes(): string[] {
-        return ['Event', 'State', 'StateMachine', 'Transition'];
+        return ['BinaryExpression', 'BooleanExpression', 'Class', 'ClassMember', 'Expression', 'ExpressionBlock', 'FieldMember', 'ForStatement', 'FunctionDeclaration', 'IfStatement', 'LambdaParameter', 'LoxElement', 'LoxProgram', 'MemberCall', 'MethodMember', 'NamedElement', 'NilExpression', 'NumberExpression', 'Parameter', 'PrintStatement', 'ReturnStatement', 'StringExpression', 'TypeReference', 'UnaryExpression', 'VariableDeclaration', 'WhileStatement'];
     }
 
     protected override computeIsSubtype(subtype: string, supertype: string): boolean {
         switch (subtype) {
+            case BinaryExpression:
+            case BooleanExpression:
+            case MemberCall:
+            case NilExpression:
+            case NumberExpression:
+            case StringExpression:
+            case UnaryExpression: {
+                return this.isSubtype(Expression, supertype);
+            }
+            case Class:
+            case FunctionDeclaration: {
+                return this.isSubtype(LoxElement, supertype) || this.isSubtype(NamedElement, supertype);
+            }
+            case Expression:
+            case ExpressionBlock:
+            case ForStatement:
+            case IfStatement:
+            case NamedElement:
+            case PrintStatement:
+            case ReturnStatement:
+            case WhileStatement: {
+                return this.isSubtype(LoxElement, supertype);
+            }
+            case FieldMember:
+            case MethodMember: {
+                return this.isSubtype(ClassMember, supertype) || this.isSubtype(NamedElement, supertype);
+            }
+            case Parameter:
+            case VariableDeclaration: {
+                return this.isSubtype(NamedElement, supertype);
+            }
             default: {
                 return false;
             }
@@ -89,11 +417,12 @@ export class StatesAstReflection extends AbstractAstReflection {
     getReferenceType(refInfo: ReferenceInfo): string {
         const referenceId = `${refInfo.container.$type}:${refInfo.property}`;
         switch (referenceId) {
-            case 'Transition:event': {
-                return Event;
+            case 'Class:superClass':
+            case 'TypeReference:reference': {
+                return Class;
             }
-            case 'Transition:state': {
-                return State;
+            case 'MemberCall:element': {
+                return NamedElement;
             }
             default: {
                 throw new Error(`${referenceId} is not a valid reference id.`);
@@ -103,39 +432,208 @@ export class StatesAstReflection extends AbstractAstReflection {
 
     getTypeMetaData(type: string): TypeMetaData {
         switch (type) {
-            case 'Event': {
+            case 'BinaryExpression': {
                 return {
-                    name: 'Event',
+                    name: 'BinaryExpression',
                     properties: [
-                        { name: 'name' }
+                        { name: 'left' },
+                        { name: 'operator' },
+                        { name: 'right' }
                     ]
                 };
             }
-            case 'State': {
+            case 'BooleanExpression': {
                 return {
-                    name: 'State',
+                    name: 'BooleanExpression',
+                    properties: [
+                        { name: 'value', defaultValue: false }
+                    ]
+                };
+            }
+            case 'Class': {
+                return {
+                    name: 'Class',
+                    properties: [
+                        { name: 'members', defaultValue: [] },
+                        { name: 'name' },
+                        { name: 'superClass' }
+                    ]
+                };
+            }
+            case 'ExpressionBlock': {
+                return {
+                    name: 'ExpressionBlock',
+                    properties: [
+                        { name: 'elements', defaultValue: [] }
+                    ]
+                };
+            }
+            case 'FieldMember': {
+                return {
+                    name: 'FieldMember',
                     properties: [
                         { name: 'name' },
-                        { name: 'transitions', defaultValue: [] }
+                        { name: 'type' }
                     ]
                 };
             }
-            case 'StateMachine': {
+            case 'ForStatement': {
                 return {
-                    name: 'StateMachine',
+                    name: 'ForStatement',
                     properties: [
-                        { name: 'events', defaultValue: [] },
+                        { name: 'block' },
+                        { name: 'condition' },
+                        { name: 'counter' },
+                        { name: 'execution' }
+                    ]
+                };
+            }
+            case 'FunctionDeclaration': {
+                return {
+                    name: 'FunctionDeclaration',
+                    properties: [
+                        { name: 'body' },
                         { name: 'name' },
-                        { name: 'states', defaultValue: [] }
+                        { name: 'parameters', defaultValue: [] },
+                        { name: 'returnType' }
                     ]
                 };
             }
-            case 'Transition': {
+            case 'IfStatement': {
                 return {
-                    name: 'Transition',
+                    name: 'IfStatement',
                     properties: [
-                        { name: 'event' },
-                        { name: 'state' }
+                        { name: 'block' },
+                        { name: 'condition' },
+                        { name: 'elseBlock' }
+                    ]
+                };
+            }
+            case 'LambdaParameter': {
+                return {
+                    name: 'LambdaParameter',
+                    properties: [
+                        { name: 'name' },
+                        { name: 'type' }
+                    ]
+                };
+            }
+            case 'LoxProgram': {
+                return {
+                    name: 'LoxProgram',
+                    properties: [
+                        { name: 'elements', defaultValue: [] }
+                    ]
+                };
+            }
+            case 'MemberCall': {
+                return {
+                    name: 'MemberCall',
+                    properties: [
+                        { name: 'arguments', defaultValue: [] },
+                        { name: 'element' },
+                        { name: 'explicitOperationCall', defaultValue: false },
+                        { name: 'previous' }
+                    ]
+                };
+            }
+            case 'MethodMember': {
+                return {
+                    name: 'MethodMember',
+                    properties: [
+                        { name: 'body' },
+                        { name: 'name' },
+                        { name: 'parameters', defaultValue: [] },
+                        { name: 'returnType' }
+                    ]
+                };
+            }
+            case 'NilExpression': {
+                return {
+                    name: 'NilExpression',
+                    properties: [
+                        { name: 'value' }
+                    ]
+                };
+            }
+            case 'NumberExpression': {
+                return {
+                    name: 'NumberExpression',
+                    properties: [
+                        { name: 'value' }
+                    ]
+                };
+            }
+            case 'Parameter': {
+                return {
+                    name: 'Parameter',
+                    properties: [
+                        { name: 'name' },
+                        { name: 'type' }
+                    ]
+                };
+            }
+            case 'PrintStatement': {
+                return {
+                    name: 'PrintStatement',
+                    properties: [
+                        { name: 'value' }
+                    ]
+                };
+            }
+            case 'ReturnStatement': {
+                return {
+                    name: 'ReturnStatement',
+                    properties: [
+                        { name: 'value' }
+                    ]
+                };
+            }
+            case 'StringExpression': {
+                return {
+                    name: 'StringExpression',
+                    properties: [
+                        { name: 'value' }
+                    ]
+                };
+            }
+            case 'TypeReference': {
+                return {
+                    name: 'TypeReference',
+                    properties: [
+                        { name: 'parameters', defaultValue: [] },
+                        { name: 'primitive' },
+                        { name: 'reference' },
+                        { name: 'returnType' }
+                    ]
+                };
+            }
+            case 'UnaryExpression': {
+                return {
+                    name: 'UnaryExpression',
+                    properties: [
+                        { name: 'operator' },
+                        { name: 'value' }
+                    ]
+                };
+            }
+            case 'VariableDeclaration': {
+                return {
+                    name: 'VariableDeclaration',
+                    properties: [
+                        { name: 'assignment', defaultValue: false },
+                        { name: 'name' },
+                        { name: 'type' },
+                        { name: 'value' }
+                    ]
+                };
+            }
+            case 'WhileStatement': {
+                return {
+                    name: 'WhileStatement',
+                    properties: [
+                        { name: 'block' },
+                        { name: 'condition' }
                     ]
                 };
             }

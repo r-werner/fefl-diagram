@@ -1,19 +1,19 @@
 {
-  "name": "states",
-  "scopeName": "source.states",
+  "name": "lox",
+  "scopeName": "source.lox",
   "fileTypes": [
-    ".sm"
+    ".lox"
   ],
   "patterns": [
     {
       "include": "#comments"
     },
     {
-      "name": "keyword.control.states",
+      "name": "keyword.control.lox",
       "match": "\\b(and|boolean|class|else|false|for|fun|if|nil|number|or|print|return|string|super|this|true|var|void|while)\\b"
     },
     {
-      "name": "string.quoted.double.states",
+      "name": "string.quoted.double.lox",
       "begin": "\"",
       "end": "\"",
       "patterns": [
@@ -27,17 +27,17 @@
     "comments": {
       "patterns": [
         {
-          "name": "comment.block.states",
+          "name": "comment.block.lox",
           "begin": "/\\*",
           "beginCaptures": {
             "0": {
-              "name": "punctuation.definition.comment.states"
+              "name": "punctuation.definition.comment.lox"
             }
           },
           "end": "\\*/",
           "endCaptures": {
             "0": {
-              "name": "punctuation.definition.comment.states"
+              "name": "punctuation.definition.comment.lox"
             }
           }
         },
@@ -45,16 +45,16 @@
           "begin": "//",
           "beginCaptures": {
             "1": {
-              "name": "punctuation.whitespace.comment.leading.states"
+              "name": "punctuation.whitespace.comment.leading.lox"
             }
           },
           "end": "(?=$)",
-          "name": "comment.line.states"
+          "name": "comment.line.lox"
         }
       ]
     },
     "string-character-escape": {
-      "name": "constant.character.escape.states",
+      "name": "constant.character.escape.lox",
       "match": "\\\\(x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4}|u\\{[0-9A-Fa-f]+\\}|[0-2][0-7]{0,2}|3[0-6][0-7]?|37[0-7]?|[4-7][0-7]?|.|$)"
     }
   }

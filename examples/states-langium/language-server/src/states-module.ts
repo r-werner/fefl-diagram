@@ -22,8 +22,13 @@ import { DefaultElementFilter, ElkFactory, ElkLayoutEngine, IElementFilter, ILay
 import { StatesDiagramGenerator } from './diagram-generator.js';
 import { StatesGeneratedModule, StatesGeneratedSharedModule } from './generated/module.js';
 import { StatesLayoutConfigurator } from './layout-config.js';
-import { registerValidationChecks, StatesValidator } from './states-validator.js';
-import { StatesCodeActionProvider } from './code-actions.js';
+// import { registerValidationChecks, StatesValidator } from './states-validator.js';
+// import { StatesCodeActionProvider } from './code-actions.js';
+import { LoxScopeProvider } from './lox-scope.js';
+
+import { LoxValidationRegistry, StatesValidator } from './states-validator.js';
+import { LoxHoverProvider } from './lox-hover-provider.js';
+
 
 /**
  * Declaration of custom services - add your own service classes here.
@@ -56,7 +61,11 @@ export const StatesModule: Module<StatesServices, PartialLangiumServices & Sprot
         ModelLayoutEngine: services => new ElkLayoutEngine(services.layout.ElkFactory, services.layout.ElementFilter, services.layout.LayoutConfigurator) as any
     },
     validation: {
+        ValidationRegistry: (services) => new LoxValidationRegistry(services),
         StatesValidator: () => new StatesValidator()
+    },
+    references: {
+        ScopeProvider: (services) => new LoxScopeProvider(services)
     },
     layout: {
         ElkFactory: () => () => new ElkConstructor({ algorithms: ['layered'] }),
@@ -64,7 +73,8 @@ export const StatesModule: Module<StatesServices, PartialLangiumServices & Sprot
         LayoutConfigurator: () => new StatesLayoutConfigurator
     },
     lsp: {
-        CodeActionProvider: () => new StatesCodeActionProvider()
+        // CodeActionProvider: () => new StatesCodeActionProvider(),
+        HoverProvider: (services) => new LoxHoverProvider(services)
     }
 };
 
@@ -98,7 +108,7 @@ export function createStatesServices(context: DefaultSharedModuleContext): {
         SprottyDefaultModule,
         StatesModule
     );
-    registerValidationChecks(states);
+    // registerValidationChecks(states);
     shared.ServiceRegistry.register(states);
     return { shared, states };
 }

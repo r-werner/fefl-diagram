@@ -6,6 +6,9 @@
         "fileExtensions": [".sm"],
         "textMate": {
             "out": "../extension/syntaxes/states.tmLanguage.json"
+        },
+        "monarch": {
+            "out": "../extension/syntaxes/states.monarch.ts"
         }
     }],
     "out": "src/generated"
