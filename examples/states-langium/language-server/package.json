@@ -4,26 +4,17 @@
     "description": "Language server for the States example",
     "version": "0.6.0",
     "private": true,
-    "homepage": "https://sprotty.org/",
-    "bugs": "https://github.com/eclipse/sprotty-vscode/issues",
-    "author": {
-        "name": "Eclipse Sprotty"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/eclipse/sprotty-vscode.git",
-        "directory": "examples/states-langium/language-server"
-    },
     "type": "module",
     "dependencies": {
-        "langium": "^3.0.0",
-        "langium-sprotty": "^3.0.0",
+        "langium": "^3.1.2",
+        "langium-sprotty": "^3.1.0",
         "sprotty-elk": "^1.2.0",
         "vscode-languageserver": "^9.0.1"
     },
     "devDependencies": {
-        "@types/node": "^14.17.3",
-        "langium-cli": "^3.0.3"
+        "@types/node": "~20.11.3",
+        "@types/uuid": "~9.0.7",
+        "langium-cli": "~3.1.0"
     },
     "scripts": {
         "prepare": "yarn run clean && yarn run langium:generate && yarn run build",

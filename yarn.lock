@@ -773,6 +773,13 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.18.63.tgz#1788fa8da838dbb5f9ea994b834278205db6ca2b"
   integrity sha512-fAtCfv4jJg+ExtXhvCkCqUKZ+4ok/JQk01qDKhL5BDDoS3AxKXhV5/MAVUZyQnSEd2GT92fkgZl0pz0Q0AzcIQ==
 
+"@types/node@~20.11.3":
+  version "20.11.30"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.11.30.tgz#9c33467fc23167a347e73834f788f4b9f399d66f"
+  integrity sha512-dHM6ZxwlmuZaRmUPfv1p+KrdD1Dci04FbdEm/9wEMouFqxYoFl5aMkt0VMAUtYRQDyYvD41WJLukhq/ha3YuTw==
+  dependencies:
+    undici-types "~5.26.4"
+
 "@types/normalize-package-data@^2.4.0":
   version "2.4.4"
   resolved "https://registry.yarnpkg.com/@types/normalize-package-data/-/normalize-package-data-2.4.4.tgz#56e2cc26c397c038fab0e3a917a12d5c5909e901"
@@ -783,10 +790,20 @@
   resolved "https://registry.yarnpkg.com/@types/semver/-/semver-7.5.8.tgz#8268a8c57a3e4abd25c165ecd36237db7948a55e"
   integrity sha512-I8EUhyrgfLrcTkzV3TSsGyl1tSuPrEDzr0yd5m90UgNxQkyDXULk3b6MlQqTCpZpNtWe1K0hzclnZkTcLBe2UQ==
 
+"@types/uuid@~9.0.7":
+  version "9.0.8"
+  resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-9.0.8.tgz#7545ba4fc3c003d6c756f651f3bf163d8f0f29ba"
+  integrity sha512-jg+97EGIcY9AGHJJRaaPVgetKDsrTgbRjQ5Msgjh/DQKEFl0DtyRr/VCOyD1T2R1MNeWPK/u7JoGhlDZnKBAfA==
+
 "@types/vscode@1.50.0":
   version "1.50.0"
   resolved "https://registry.yarnpkg.com/@types/vscode/-/vscode-1.50.0.tgz#9f409d9dce22ebc11e2fcdd28fabd1917a961bb7"
   integrity sha512-QnIeyi4L2DiD9M2bAQKRzT/EQvc80qP9UL6JD5TiLlNRL1khIDg4ej4mDSRbtFrDAsRntFI1RhMvdomUThMsqg==
+
+"@types/vscode@~1.85.0":
+  version "1.85.0"
+  resolved "https://registry.yarnpkg.com/@types/vscode/-/vscode-1.85.0.tgz#46beb07f0f626665b52d1e2294382b2bc63b602e"
+  integrity sha512-CF/RBon/GXwdfmnjZj0WTUMZN5H6YITOfBCP4iEZlOtVQXuzw6t7Le7+cR+7JzdMrnlm7Mfp49Oj2TuSXIWo3g==
 
 "@typescript-eslint/eslint-plugin@^6.11.0":
   version "6.21.0"
@@ -3081,39 +3098,39 @@ kind-of@^6.0.2, kind-of@^6.0.3:
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-6.0.3.tgz#07c05034a6c349fa06e24fa35aa76db4580ce4dd"
   integrity sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==
 
-langium-cli@^3.0.3:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/langium-cli/-/langium-cli-3.0.3.tgz#10708ac373c4cb4df42bd5affdcc95bdd3b910aa"
-  integrity sha512-g6PdhEq5IiYWK/oiySILglPvFdK6ofQdzC+U7PJmFH++bDKu0DGdxjWzDauUN5WUDyVQETWKgtYDmmbcxPzN0w==
+langium-cli@~3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/langium-cli/-/langium-cli-3.1.0.tgz#4d9591fa0812f4bb46a516aa892cde011db88f20"
+  integrity sha512-bgqCtsSr4buhtL29Eh1Q+Y0yOKsXub6pzBc49VxaeBg2bI+QYNZjHYu5ynu4XGGEy6kkJJB46ecxukCme9Xr4A==
   dependencies:
     chalk "~5.3.0"
     commander "~11.0.0"
     fs-extra "~11.1.1"
     jsonschema "~1.4.1"
-    langium "~3.0.0"
-    langium-railroad "~3.0.0"
+    langium "~3.1.0"
+    langium-railroad "~3.1.0"
     lodash "~4.17.21"
 
-langium-railroad@~3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/langium-railroad/-/langium-railroad-3.0.0.tgz#2cd29737bad092cc9b0c7ea231fa066de02072e9"
-  integrity sha512-GQOnQBGl5gJqzgK/4bKvJO5QhJGNnprpYH6Fghbl4FviVLHwP6yzyqiouDelLSoCadChCr2JqKaBp5HXv7CgWw==
+langium-railroad@~3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/langium-railroad/-/langium-railroad-3.1.0.tgz#68f480f3f4c59d6d218022c49a5cd5d1ec91cd6d"
+  integrity sha512-+/SJwIPAOBQCm0hoepUcckhrb6S/TnuAPy7c03pznVgUXH6OlbXy9FC62L2C2GclWRQlnXJVb7tCi0tmuagK+w==
   dependencies:
-    langium "~3.0.0"
+    langium "~3.1.0"
     railroad-diagrams "~1.0.0"
 
-langium-sprotty@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/langium-sprotty/-/langium-sprotty-3.0.0.tgz#e1e1eee6c3c419ae9fe4511ea2e7c36f02ea8bfb"
-  integrity sha512-hXjZpmJOoJHWxXOGKS794JEJNbtUKipE1kTYod/geo37+vMB/iXSP9ZExU+nRA7uyxenV0WMhEE3SgJdnl1GYQ==
+langium-sprotty@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/langium-sprotty/-/langium-sprotty-3.1.0.tgz#d0bd0537e6e2c719488619fc388ccbbdfdb0d08d"
+  integrity sha512-XKJNJ92OOx92Gi+HIJQHEtNrS1IGLt0vdrQX+bUvStC5QcVfHpCFRY5jvV8yb++gGezGGAi9C/1y6NL0n51D2w==
   dependencies:
-    langium "~3.0.0"
+    langium "~3.1.0"
     sprotty-protocol "^1.0.0"
 
-langium@^3.0.0, langium@~3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/langium/-/langium-3.0.0.tgz#4938294eb57c59066ef955070ac4d0c917b26026"
-  integrity sha512-+Ez9EoiByeoTu/2BXmEaZ06iPNXM6thWJp02KfBO/raSMyCJ4jw7AkWWa+zBCTm0+Tw1Fj9FOxdqSskyN5nAwg==
+langium@^3.1.2, langium@~3.1.0:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/langium/-/langium-3.1.2.tgz#e082003e58e912bd10b30511a2de1b8ec99b18be"
+  integrity sha512-f6HS/K6ZxfEpzc34HpKiAQjhBRGTRjvhy7pJ6pGbun3h6bOy/+lrO9qnIVANowxt4MSoLSZ+ySOJ+1OhIPwkow==
   dependencies:
     chevrotain "~11.0.3"
     chevrotain-allstar "~0.3.0"

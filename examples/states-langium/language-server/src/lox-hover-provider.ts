@@ -1,3 +1,6 @@
+/********************************************************************************
+ * Copyright (c) 2024 Genielabs
+ ********************************************************************************/
 import { AstNode } from "langium";
 import { Hover } from "vscode-languageclient";
 import { isClass, isNamedElement } from "./generated/ast.js";
@@ -11,10 +14,10 @@ export class LoxHoverProvider extends AstNodeHoverProvider {
             return {
                 contents: {
                     kind: 'markdown',
-                    language: 'lox',
+                    language: 'states',
                     value: `class ${node.name}${node.superClass ? ` ${node.superClass.$refText}` : ''}`
                 }
-            }
+            };
         } else if (isNamedElement(node)) {
             const type = inferType(node, new Map());
             if (isErrorType(type)) {
@@ -23,10 +26,10 @@ export class LoxHoverProvider extends AstNodeHoverProvider {
             return {
                 contents: {
                     kind: 'markdown',
-                    language: 'lox',
+                    language: 'states',
                     value: `var ${node.name}: ${typeToString(type)}`
                 }
-            }
+            };
         }
         return undefined;
     }

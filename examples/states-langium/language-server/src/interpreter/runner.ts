@@ -1,6 +1,10 @@
+/********************************************************************************
+ * Copyright (c) 2024 Genielabs
+ ********************************************************************************/
 import { AstNode, EmptyFileSystem, interruptAndCheck, LangiumDocument, MaybePromise, URI } from "langium";
-import { BinaryExpression, Expression, isBinaryExpression, isBooleanExpression, isClass, isExpression, isExpressionBlock, isForStatement, isFunctionDeclaration, isIfStatement, isMemberCall, isNilExpression, isNumberExpression, isParameter, isPrintStatement, isReturnStatement, isStringExpression, isUnaryExpression, isVariableDeclaration, isWhileStatement, LoxElement, LoxProgram, MemberCall } from "../language-server/generated/ast.js";
-import { createStatesServices } from "../language-server/src/states-module.js";
+import { BinaryExpression, Expression, isBinaryExpression, isBooleanExpression, isClass, isExpression, isExpressionBlock, isForStatement, isFunctionDeclaration, isIfStatement, isMemberCall, isNilExpression, isNumberExpression, isParameter, isPrintStatement, isReturnStatement, isStringExpression, isUnaryExpression, isVariableDeclaration, isWhileStatement, LoxElement, LoxProgram, MemberCall }
+    from "../generated/ast.js";
+import { createStatesServices } from "../states-module.js";
 import { v4 } from 'uuid';
 import { CancellationToken, CancellationTokenSource } from "vscode-jsonrpc";
 
@@ -91,7 +95,7 @@ async function buildDocument(program: string): Promise<BuildResult> {
         dispose: async () => {
             await services.shared.workspace.DocumentBuilder.update([], [uri]);
         }
-    }
+    };
 }
 
 export async function runProgram(program: LoxProgram, outerContext: InterpreterContext): Promise<void> {
@@ -121,7 +125,7 @@ export async function runProgram(program: LoxProgram, outerContext: InterpreterC
         await interruptAndCheck(context.cancellationToken);
 
         if (!isClass(statement) && !isFunctionDeclaration(statement)) {
-            await runLoxElement(statement, context, () => { end = true });
+            await runLoxElement(statement, context, () => { end = true; });
         } else if (isClass(statement)) {
             throw new AstNodeError(statement, 'Classes are currently unsupported');
         }
@@ -145,7 +149,7 @@ async function runLoxElement(element: LoxElement, context: RunnerContext, return
             end = true;
             // Call the outer return function
             returnFn(value);
-        }
+        };
         for (const statement of element.elements) {
             await runLoxElement(statement, context, blockReturn);
             if (end) {
@@ -313,7 +317,7 @@ async function runMemberCall(memberCall: MemberCall, context: RunnerContext): Pr
             let functionValue: unknown;
             const returnFn: ReturnFunction = (returnValue) => {
                 functionValue = returnValue;
-            }
+            };
             await runLoxElement(func.body, context, returnFn);
             context.variables.leave();
             return functionValue;

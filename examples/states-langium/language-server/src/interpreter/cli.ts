@@ -1,7 +1,10 @@
+/********************************************************************************
+ * Copyright (c) 2024 Genielabs
+ ********************************************************************************/
 import { Command } from 'commander';
 import fs from 'fs';
 import { runInterpreter } from './runner.js';
-// import pkg from '../../package.json' with { type: 'json' };
+// import pkg from '../package.json' with { type: 'json' };
 
 const program = new Command();
 
@@ -22,5 +25,5 @@ async function runCommand(file: string): Promise<void> {
     await runInterpreter(content, {
         log: value => console.log(`${value}`)
     });
-    console.log(`Lox program finished running in ${Date.now() - now}ms`);
+    console.log(`Fefl program finished running in ${Date.now() - now}ms`);
 }

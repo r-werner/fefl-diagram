@@ -25,6 +25,9 @@ import * as vscode from 'vscode';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient/node';
 import { Messenger } from 'vscode-messenger';
 
+import { FeflNotebookSerializer } from './notebook/fefl-notebook-serializer.js';
+import { FeflNotebookKernel } from './notebook/fefl-notebook-kernel.js';
+
 let languageClient: LanguageClient;
 
 export function activate(context: vscode.ExtensionContext) {
@@ -100,6 +103,14 @@ export function activate(context: vscode.ExtensionContext) {
         registerDefaultCommands(webviewViewProvider, context, { extensionPrefix: 'states' });
         registerTextEditorSync(webviewViewProvider, context);
     }
+
+    context.subscriptions.push(
+        vscode.workspace.registerNotebookSerializer(
+            'fefl-notebook', new FeflNotebookSerializer(), { transientOutputs: true }
+        ),
+        new FeflNotebookKernel()
+    );
+
 }
 
 function createLanguageClient(context: vscode.ExtensionContext): LanguageClient {
@@ -121,7 +132,12 @@ function createLanguageClient(context: vscode.ExtensionContext): LanguageClient 
 
     // Options to control the language client
     const clientOptions: LanguageClientOptions = {
-        documentSelector: [{ scheme: 'file', language: 'states' }],
+        documentSelector: [
+            { scheme: 'file', language: 'states' }, {
+                scheme: 'vscode-notebook-cell', // only notebook cells
+                language: 'states'
+            }
+        ],
         synchronize: {
             // Notify the server about file changes to files contained in the workspace
             fileEvents: fileSystemWatcher

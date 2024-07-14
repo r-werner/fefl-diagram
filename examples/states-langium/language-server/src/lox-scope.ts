@@ -1,3 +1,6 @@
+/********************************************************************************
+ * Copyright (c) 2024 Genielabs
+ ********************************************************************************/
 import { AstUtils, DefaultScopeProvider, EMPTY_SCOPE, ReferenceInfo, Scope } from "langium";
 import { Class, isClass, MemberCall } from "./generated/ast.js";
 import { isClassType } from "./type-system/descriptions.js";
