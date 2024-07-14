@@ -1,11 +1,13 @@
-
+/********************************************************************************
+ * Copyright (c) 2024 Genielabs
+ ********************************************************************************/
 import { AstNode } from "langium";
 import {
     BooleanExpression,
     Class,
     NumberExpression,
     StringExpression
-} from "../generated/ast.js"
+} from "../generated/ast.js";
 
 export type TypeDescription =
     | NilTypeDescription
@@ -38,7 +40,7 @@ export interface VoidTypeDescription {
 export function createVoidType(): VoidTypeDescription {
     return {
         $type: "void"
-    }
+    };
 }
 
 export function isVoidType(item: TypeDescription): item is VoidTypeDescription {

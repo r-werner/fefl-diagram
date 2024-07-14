@@ -19,7 +19,8 @@ import { AstNode, AstUtils,
     ValidationAcceptor, ValidationChecks, ValidationRegistry } from 'langium';
 // import { StatesAstType, State, Transition, StateMachine } from './generated/ast.js';
 import { BinaryExpression, Class, ExpressionBlock, FunctionDeclaration, isReturnStatement,
-    StatesAstType, MethodMember, TypeReference, UnaryExpression, VariableDeclaration } from './generated/ast.js';
+    FeflAstType, MethodMember, TypeReference, UnaryExpression, VariableDeclaration,
+    ConstantDeclaration} from './generated/ast.js';
 import { StatesServices } from './states-module.js';
 
 import { isAssignable } from './type-system/assignment.js';
@@ -45,10 +46,11 @@ export class LoxValidationRegistry extends ValidationRegistry {
     constructor(services: StatesServices) {
         super(services);
         const validator = services.validation.StatesValidator;
-        const checks: ValidationChecks<StatesAstType> = {
+        const checks: ValidationChecks<FeflAstType> = {
             BinaryExpression: validator.checkBinaryOperationAllowed,
             UnaryExpression: validator.checkUnaryOperationAllowed,
             VariableDeclaration: validator.checkVariableDeclaration,
+            ConstantDeclaration: validator.checkConstantDeclaration,
             MethodMember: validator.checkMethodReturnType,
             Class: validator.checkClassDeclaration,
             FunctionDeclaration: validator.checkFunctionReturnType
@@ -95,6 +97,25 @@ export class StatesValidator {
                     node: returnStatement
                 });
             }
+        }
+    }
+
+    checkConstantDeclaration(decl: ConstantDeclaration, accept: ValidationAcceptor): void {
+        if (decl.type && decl.value) {
+            const map = this.getTypeCache();
+            const left = inferType(decl.type, map);
+            const right = inferType(decl.value, map);
+            if (!isAssignable(right, left)) {
+                accept('error', `Type '${typeToString(right)}' is not assignable to type '${typeToString(left)}'.`, {
+                    node: decl,
+                    property: 'value'
+                });
+            }
+        } else if (!decl.value) {
+            accept('error', 'Constants require an assignment at creation', {
+                node: decl,
+                property: 'name'
+            });
         }
     }
 

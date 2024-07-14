@@ -2,12 +2,12 @@
  * Copyright (c) 2024 Genielabs
  ********************************************************************************/
 import * as vscode from 'vscode';
-import { runInterpreter } from 'states-language-server/src/interpreter/interpreter';
+import { runInterpreter } from 'fefl-language-server/src/interpreter/interpreter';
 
 export class FeflNotebookKernel {
     readonly id = 'fefl-kernel';
     public readonly label = 'Fefl Kernel';
-    readonly supportedLanguages = ['states'];
+    readonly supportedLanguages = ['fefl'];
 
     private _executionOrder = 0;
     private readonly _controller: vscode.NotebookController;
@@ -47,7 +47,7 @@ export class FeflNotebookKernel {
             const stringValue = `${value}`;
             lines += stringValue + '\n';
             await execution.replaceOutput(new vscode.NotebookCellOutput([vscode.NotebookCellOutputItem.text(lines)]));
-        }
+        };
 
         try {
             await runInterpreter(text, { log });

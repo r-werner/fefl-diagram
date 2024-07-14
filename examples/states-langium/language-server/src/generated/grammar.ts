@@ -6,11 +6,11 @@
 import type { Grammar } from 'langium';
 import { loadGrammarFromJson } from 'langium';
 
-let loadedStatesGrammar: Grammar | undefined;
-export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStatesGrammar = loadGrammarFromJson(`{
+let loadedFeflGrammar: Grammar | undefined;
+export const FeflGrammar = (): Grammar => loadedFeflGrammar ?? (loadedFeflGrammar = loadGrammarFromJson(`{
   "$type": "Grammar",
   "isDeclared": true,
-  "name": "States",
+  "name": "Fefl",
   "rules": [
     {
       "$type": "ParserRule",
@@ -44,7 +44,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@25"
+              "$ref": "#/rules@26"
             },
             "arguments": []
           },
@@ -79,7 +79,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@23"
+              "$ref": "#/rules@24"
             },
             "arguments": []
           },
@@ -90,6 +90,22 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
                 "$type": "RuleCall",
                 "rule": {
                   "$ref": "#/rules@8"
+                },
+                "arguments": []
+              },
+              {
+                "$type": "Keyword",
+                "value": ";"
+              }
+            ]
+          },
+          {
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "RuleCall",
+                "rule": {
+                  "$ref": "#/rules@9"
                 },
                 "arguments": []
               },
@@ -137,7 +153,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
               {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@9"
+                  "$ref": "#/rules@10"
                 },
                 "arguments": []
               },
@@ -177,7 +193,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@9"
+                "$ref": "#/rules@10"
               },
               "arguments": []
             }
@@ -250,7 +266,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@9"
+                "$ref": "#/rules@10"
               },
               "arguments": []
             }
@@ -318,7 +334,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@9"
+                "$ref": "#/rules@10"
               },
               "arguments": []
             },
@@ -335,7 +351,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@9"
+                "$ref": "#/rules@10"
               },
               "arguments": []
             },
@@ -383,7 +399,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@9"
+                "$ref": "#/rules@10"
               },
               "arguments": []
             }
@@ -414,7 +430,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@9"
+                "$ref": "#/rules@10"
               },
               "arguments": []
             },
@@ -483,7 +499,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
           },
           {
             "$type": "Keyword",
-            "value": "var"
+            "value": "let"
           },
           {
             "$type": "Assignment",
@@ -492,7 +508,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@32"
+                "$ref": "#/rules@33"
               },
               "arguments": []
             }
@@ -511,7 +527,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@29"
+                    "$ref": "#/rules@30"
                   },
                   "arguments": []
                 }
@@ -538,7 +554,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@9"
+                    "$ref": "#/rules@10"
                   },
                   "arguments": []
                 }
@@ -557,11 +573,95 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
     },
     {
       "$type": "ParserRule",
+      "name": "ConstantDeclaration",
+      "returnType": {
+        "$ref": "#/types@0"
+      },
+      "definition": {
+        "$type": "Group",
+        "elements": [
+          {
+            "$type": "Action",
+            "inferredType": {
+              "$type": "InferredType",
+              "name": "ConstantDeclaration"
+            }
+          },
+          {
+            "$type": "Keyword",
+            "value": "const"
+          },
+          {
+            "$type": "Assignment",
+            "feature": "name",
+            "operator": "=",
+            "terminal": {
+              "$type": "RuleCall",
+              "rule": {
+                "$ref": "#/rules@33"
+              },
+              "arguments": []
+            }
+          },
+          {
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "Keyword",
+                "value": ":"
+              },
+              {
+                "$type": "Assignment",
+                "feature": "type",
+                "operator": "=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$ref": "#/rules@30"
+                  },
+                  "arguments": []
+                }
+              }
+            ],
+            "cardinality": "?"
+          },
+          {
+            "$type": "Assignment",
+            "feature": "assignment",
+            "operator": "=",
+            "terminal": {
+              "$type": "Keyword",
+              "value": "="
+            }
+          },
+          {
+            "$type": "Assignment",
+            "feature": "value",
+            "operator": "=",
+            "terminal": {
+              "$type": "RuleCall",
+              "rule": {
+                "$ref": "#/rules@10"
+              },
+              "arguments": []
+            }
+          }
+        ]
+      },
+      "definesHiddenTokens": false,
+      "entry": false,
+      "fragment": false,
+      "hiddenTokens": [],
+      "parameters": [],
+      "wildcard": false
+    },
+    {
+      "$type": "ParserRule",
       "name": "Expression",
       "definition": {
         "$type": "RuleCall",
         "rule": {
-          "$ref": "#/rules@10"
+          "$ref": "#/rules@11"
         },
         "arguments": []
       },
@@ -585,7 +685,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@11"
+              "$ref": "#/rules@12"
             },
             "arguments": []
           },
@@ -617,7 +717,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@11"
+                    "$ref": "#/rules@12"
                   },
                   "arguments": []
                 }
@@ -647,7 +747,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@12"
+              "$ref": "#/rules@13"
             },
             "arguments": []
           },
@@ -688,7 +788,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@12"
+                    "$ref": "#/rules@13"
                   },
                   "arguments": []
                 }
@@ -718,7 +818,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@13"
+              "$ref": "#/rules@14"
             },
             "arguments": []
           },
@@ -759,7 +859,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@13"
+                    "$ref": "#/rules@14"
                   },
                   "arguments": []
                 }
@@ -789,7 +889,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@14"
+              "$ref": "#/rules@15"
             },
             "arguments": []
           },
@@ -830,7 +930,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@14"
+                    "$ref": "#/rules@15"
                   },
                   "arguments": []
                 }
@@ -860,7 +960,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@15"
+              "$ref": "#/rules@16"
             },
             "arguments": []
           },
@@ -917,7 +1017,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@15"
+                    "$ref": "#/rules@16"
                   },
                   "arguments": []
                 }
@@ -947,7 +1047,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@16"
+              "$ref": "#/rules@17"
             },
             "arguments": []
           },
@@ -985,7 +1085,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
                           "terminal": {
                             "$type": "RuleCall",
                             "rule": {
-                              "$ref": "#/rules@32"
+                              "$ref": "#/rules@33"
                             },
                             "arguments": []
                           },
@@ -1014,7 +1114,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
                                 "terminal": {
                                   "$type": "RuleCall",
                                   "rule": {
-                                    "$ref": "#/rules@9"
+                                    "$ref": "#/rules@10"
                                   },
                                   "arguments": []
                                 }
@@ -1033,7 +1133,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
                                     "terminal": {
                                       "$type": "RuleCall",
                                       "rule": {
-                                        "$ref": "#/rules@9"
+                                        "$ref": "#/rules@10"
                                       },
                                       "arguments": []
                                     }
@@ -1075,7 +1175,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
                             "terminal": {
                               "$type": "RuleCall",
                               "rule": {
-                                "$ref": "#/rules@9"
+                                "$ref": "#/rules@10"
                               },
                               "arguments": []
                             }
@@ -1094,7 +1194,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
                                 "terminal": {
                                   "$type": "RuleCall",
                                   "rule": {
-                                    "$ref": "#/rules@9"
+                                    "$ref": "#/rules@10"
                                   },
                                   "arguments": []
                                 }
@@ -1145,7 +1245,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
               {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@9"
+                  "$ref": "#/rules@10"
                 },
                 "arguments": []
               },
@@ -1158,14 +1258,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@18"
-            },
-            "arguments": []
-          },
-          {
-            "$type": "RuleCall",
-            "rule": {
-              "$ref": "#/rules@20"
+              "$ref": "#/rules@19"
             },
             "arguments": []
           },
@@ -1179,13 +1272,6 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@19"
-            },
-            "arguments": []
-          },
-          {
-            "$type": "RuleCall",
-            "rule": {
               "$ref": "#/rules@22"
             },
             "arguments": []
@@ -1193,7 +1279,21 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@17"
+              "$ref": "#/rules@20"
+            },
+            "arguments": []
+          },
+          {
+            "$type": "RuleCall",
+            "rule": {
+              "$ref": "#/rules@23"
+            },
+            "arguments": []
+          },
+          {
+            "$type": "RuleCall",
+            "rule": {
+              "$ref": "#/rules@18"
             },
             "arguments": []
           }
@@ -1238,7 +1338,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
                   "terminal": {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@32"
+                      "$ref": "#/rules@33"
                     },
                     "arguments": []
                   },
@@ -1301,7 +1401,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
                     "terminal": {
                       "$type": "RuleCall",
                       "rule": {
-                        "$ref": "#/rules@9"
+                        "$ref": "#/rules@10"
                       },
                       "arguments": []
                     }
@@ -1320,7 +1420,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
                         "terminal": {
                           "$type": "RuleCall",
                           "rule": {
-                            "$ref": "#/rules@9"
+                            "$ref": "#/rules@10"
                           },
                           "arguments": []
                         }
@@ -1382,7 +1482,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@9"
+                "$ref": "#/rules@10"
               },
               "arguments": []
             }
@@ -1406,7 +1506,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
         "terminal": {
           "$type": "RuleCall",
           "rule": {
-            "$ref": "#/rules@33"
+            "$ref": "#/rules@34"
           },
           "arguments": []
         }
@@ -1428,7 +1528,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
         "terminal": {
           "$type": "RuleCall",
           "rule": {
-            "$ref": "#/rules@34"
+            "$ref": "#/rules@35"
           },
           "arguments": []
         }
@@ -1495,7 +1595,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
         "elements": [
           {
             "$type": "Keyword",
-            "value": "fun"
+            "value": "function"
           },
           {
             "$type": "Assignment",
@@ -1504,7 +1604,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@32"
+                "$ref": "#/rules@33"
               },
               "arguments": []
             }
@@ -1523,7 +1623,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@24"
+                    "$ref": "#/rules@25"
                   },
                   "arguments": []
                 }
@@ -1542,7 +1642,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
                     "terminal": {
                       "$type": "RuleCall",
                       "rule": {
-                        "$ref": "#/rules@24"
+                        "$ref": "#/rules@25"
                       },
                       "arguments": []
                     }
@@ -1568,7 +1668,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@29"
+                "$ref": "#/rules@30"
               },
               "arguments": []
             }
@@ -1607,7 +1707,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@32"
+                "$ref": "#/rules@33"
               },
               "arguments": []
             }
@@ -1623,7 +1723,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@29"
+                "$ref": "#/rules@30"
               },
               "arguments": []
             }
@@ -1654,7 +1754,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@32"
+                "$ref": "#/rules@33"
               },
               "arguments": []
             }
@@ -1673,12 +1773,12 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
                 "terminal": {
                   "$type": "CrossReference",
                   "type": {
-                    "$ref": "#/rules@25"
+                    "$ref": "#/rules@26"
                   },
                   "terminal": {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@32"
+                      "$ref": "#/rules@33"
                     },
                     "arguments": []
                   },
@@ -1699,7 +1799,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@26"
+                "$ref": "#/rules@27"
               },
               "arguments": []
             },
@@ -1727,14 +1827,14 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@27"
+              "$ref": "#/rules@28"
             },
             "arguments": []
           },
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@28"
+              "$ref": "#/rules@29"
             },
             "arguments": []
           }
@@ -1760,7 +1860,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@32"
+                "$ref": "#/rules@33"
               },
               "arguments": []
             }
@@ -1779,7 +1879,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@24"
+                    "$ref": "#/rules@25"
                   },
                   "arguments": []
                 }
@@ -1798,7 +1898,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
                     "terminal": {
                       "$type": "RuleCall",
                       "rule": {
-                        "$ref": "#/rules@24"
+                        "$ref": "#/rules@25"
                       },
                       "arguments": []
                     }
@@ -1824,7 +1924,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@29"
+                "$ref": "#/rules@30"
               },
               "arguments": []
             }
@@ -1863,7 +1963,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@32"
+                "$ref": "#/rules@33"
               },
               "arguments": []
             }
@@ -1879,7 +1979,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@29"
+                "$ref": "#/rules@30"
               },
               "arguments": []
             }
@@ -1906,12 +2006,12 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
             "terminal": {
               "$type": "CrossReference",
               "type": {
-                "$ref": "#/rules@25"
+                "$ref": "#/rules@26"
               },
               "terminal": {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@32"
+                  "$ref": "#/rules@33"
                 },
                 "arguments": []
               },
@@ -1961,7 +2061,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
                     "terminal": {
                       "$type": "RuleCall",
                       "rule": {
-                        "$ref": "#/rules@30"
+                        "$ref": "#/rules@31"
                       },
                       "arguments": []
                     }
@@ -1980,7 +2080,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
                         "terminal": {
                           "$type": "RuleCall",
                           "rule": {
-                            "$ref": "#/rules@30"
+                            "$ref": "#/rules@31"
                           },
                           "arguments": []
                         }
@@ -2006,7 +2106,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@29"
+                    "$ref": "#/rules@30"
                   },
                   "arguments": []
                 }
@@ -2038,7 +2138,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@32"
+                    "$ref": "#/rules@33"
                   },
                   "arguments": []
                 }
@@ -2057,7 +2157,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@29"
+                "$ref": "#/rules@30"
               },
               "arguments": []
             }
@@ -2146,13 +2246,13 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
           {
             "$type": "SimpleType",
             "typeRef": {
-              "$ref": "#/rules@24"
+              "$ref": "#/rules@25"
             }
           },
           {
             "$type": "SimpleType",
             "typeRef": {
-              "$ref": "#/rules@23"
+              "$ref": "#/rules@24"
             }
           },
           {
@@ -2164,7 +2264,7 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
           {
             "$type": "SimpleType",
             "typeRef": {
-              "$ref": "#/rules@27"
+              "$ref": "#/rules@9/definition/elements@0/inferredType"
             }
           },
           {
@@ -2176,7 +2276,13 @@ export const StatesGrammar = (): Grammar => loadedStatesGrammar ?? (loadedStates
           {
             "$type": "SimpleType",
             "typeRef": {
-              "$ref": "#/rules@25"
+              "$ref": "#/rules@29"
+            }
+          },
+          {
+            "$type": "SimpleType",
+            "typeRef": {
+              "$ref": "#/rules@26"
             }
           }
         ]

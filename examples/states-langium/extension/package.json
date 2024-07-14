@@ -1,14 +1,14 @@
 {
-    "name": "states-extension-langium",
-    "displayName": "States Example (Langium)",
-    "description": "An example Xtext-based DSL with Sprotty diagrams for statemachines",
+    "name": "fefl-extension-langium",
+    "displayName": "Fefl language",
+    "description": "Fefl language and VSC extension with Sprotty diagrams",
     "private": true,
     "author": {
-        "name": "Eclipse Sprotty"
+        "name": "Genielabs"
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/eclipse-sprotty/sprotty-vscode",
+        "url": "https://github.com/r-werner/fefl-diagram",
         "directory": "examples/states-langium/extension"
     },
     "version": "0.6.0",
@@ -22,22 +22,22 @@
     "contributes": {
         "languages": [
             {
-                "id": "states",
+                "id": "fefl",
                 "aliases": [
-                    "states",
-                    "sm"
+                    "fefl",
+                    "fefl"
                 ],
                 "extensions": [
-                    ".sm"
+                    ".fefl"
                 ],
                 "configuration": "./language-configuration.json"
             }
         ],
         "grammars": [
             {
-                "language": "states",
-                "scopeName": "source.states",
-                "path": "./syntaxes/states.tmLanguage.json"
+                "language": "fefl",
+                "scopeName": "source.fefl",
+                "path": "./syntaxes/fefl.tmLanguage.json"
             }
         ],
         "notebooks": [
@@ -53,11 +53,11 @@
         ],
         "customEditors": [
             {
-                "viewType": "states",
-                "displayName": "States Editor",
+                "viewType": "fefl",
+                "displayName": "Fefl Editor",
                 "selector": [
                     {
-                        "filenamePattern": "*.sm"
+                        "filenamePattern": "*.fefl"
                     }
                 ],
                 "priority": "option"
@@ -66,90 +66,90 @@
         "viewsContainers": {
             "activitybar": [
                 {
-                    "id": "states-container",
-                    "title": "States",
+                    "id": "fefl-container",
+                    "title": "fefl",
                     "icon": "$(symbol-structure)"
                 }
             ]
         },
         "views": {
-            "states-container": [
+            "fefl-container": [
                 {
-                    "id": "states",
+                    "id": "fefl",
                     "type": "webview",
-                    "name": "State Machine"
+                    "name": "Fefl View"
                 }
             ]
         },
         "commands": [
             {
-                "command": "states.diagram.open",
+                "command": "fefl.diagram.open",
                 "title": "Open in Diagram",
                 "icon": "$(symbol-structure)",
-                "category": "States Diagram"
+                "category": "Fefl Diagram"
             },
             {
-                "command": "states.diagram.fit",
+                "command": "fefl.diagram.fit",
                 "title": "Fit to Screen",
-                "category": "States Diagram"
+                "category": "Fefl Diagram"
             },
             {
-                "command": "states.diagram.center",
+                "command": "fefl.diagram.center",
                 "title": "Center selection",
-                "category": "States Diagram"
+                "category": "Fefl Diagram"
             },
             {
-                "command": "states.diagram.delete",
+                "command": "fefl.diagram.delete",
                 "title": "Delete selected element",
-                "category": "States Diagram"
+                "category": "Fefl Diagram"
             },
             {
-                "command": "states.diagram.export",
+                "command": "fefl.diagram.export",
                 "title": "Export diagram to SVG",
-                "category": "States Diagram"
+                "category": "Fefl Diagram"
             }
         ],
         "menus": {
             "commandPalette": [
                 {
-                    "command": "states.diagram.open",
-                    "when": "editorLangId == 'states'"
+                    "command": "fefl.diagram.open",
+                    "when": "editorLangId == 'fefl'"
                 },
                 {
-                    "command": "states.diagram.fit",
-                    "when": "states-focused"
+                    "command": "fefl.diagram.fit",
+                    "when": "fefl-focused"
                 },
                 {
-                    "command": "states.diagram.center",
-                    "when": "states-focused"
+                    "command": "fefl.diagram.center",
+                    "when": "fefl-focused"
                 },
                 {
-                    "command": "states.diagram.delete",
-                    "when": "states-focused"
+                    "command": "fefl.diagram.delete",
+                    "when": "fefl-focused"
                 },
                 {
-                    "command": "states.diagram.export",
-                    "when": "states-focused"
+                    "command": "fefl.diagram.export",
+                    "when": "fefl-focused"
                 }
             ],
             "editor/context": [
                 {
-                    "command": "states.diagram.open",
-                    "when": "editorLangId == 'states'",
+                    "command": "fefl.diagram.open",
+                    "when": "editorLangId == 'fefl'",
                     "group": "navigation"
                 }
             ],
             "editor/title": [
                 {
-                    "command": "states.diagram.open",
-                    "when": "editorLangId == 'states'",
+                    "command": "fefl.diagram.open",
+                    "when": "editorLangId == 'fefl'",
                     "group": "navigation"
                 }
             ],
             "explorer/context": [
                 {
-                    "command": "states.diagram.open",
-                    "when": "resourceExtname == '.sm'",
+                    "command": "fefl.diagram.open",
+                    "when": "resourceExtname == '.fefl'",
                     "group": "navigation"
                 }
             ]
@@ -158,31 +158,31 @@
             {
                 "key": "alt+f",
                 "mac": "alt+f",
-                "command": "states.diagram.fit",
-                "when": "states-focused"
+                "command": "fefl.diagram.fit",
+                "when": "fefl-focused"
             },
             {
                 "key": "alt+c",
                 "mac": "alt+c",
-                "command": "states.diagram.center",
-                "when": "states-focused"
+                "command": "fefl.diagram.center",
+                "when": "fefl-focused"
             },
             {
                 "key": "alt+e",
                 "mac": "alt+e",
-                "command": "states.diagram.export",
-                "when": "states-focused"
+                "command": "fefl.diagram.export",
+                "when": "fefl-focused"
             },
             {
                 "key": "delete",
                 "mac": "delete",
-                "command": "states.diagram.delete",
-                "when": "states-focused"
+                "command": "fefl.diagram.delete",
+                "when": "fefl-focused"
             }
         ]
     },
     "activationEvents": [
-        "onWebviewPanel:states"
+        "onWebviewPanel:fefl"
     ],
     "files": [
         "lib",

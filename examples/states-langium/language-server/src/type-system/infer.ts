@@ -1,5 +1,8 @@
+/********************************************************************************
+ * Copyright (c) 2024 Genielabs
+ ********************************************************************************/
 import { AstNode } from "langium";
-import { BinaryExpression, Class, isBinaryExpression, isBooleanExpression, isClass, isFieldMember, isFunctionDeclaration, isMemberCall, isMethodMember, isNilExpression, isNumberExpression, isParameter, isPrintStatement, isReturnStatement, isStringExpression, isTypeReference, isUnaryExpression, isVariableDeclaration, MemberCall, TypeReference } from "../generated/ast.js";
+import { BinaryExpression, Class, isBinaryExpression, isBooleanExpression, isClass, isConstantDeclaration, isFieldMember, isFunctionDeclaration, isMemberCall, isMethodMember, isNilExpression, isNumberExpression, isParameter, isPrintStatement, isReturnStatement, isStringExpression, isTypeReference, isUnaryExpression, isVariableDeclaration, MemberCall, TypeReference } from "../generated/ast.js";
 import { createBooleanType, createClassType, createErrorType, createFunctionType, createNilType, createNumberType, createStringType, createVoidType, isFunctionType, isStringType, TypeDescription } from "./descriptions.js";
 
 export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDescription>): TypeDescription {
@@ -37,7 +40,7 @@ export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDes
                 type = type.returnType;
             }
         }
-    } else if (isVariableDeclaration(node)) {
+    } else if (isVariableDeclaration(node) || isConstantDeclaration(node)) {
         if (node.type) {
             type = inferType(node.type, cache);
         } else if (node.value) {

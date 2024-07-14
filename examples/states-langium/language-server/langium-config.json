@@ -1,14 +1,14 @@
 {
-    "projectName": "States",
+    "projectName": "Fefl",
     "languages": [{
-        "id": "states",
-        "grammar": "src/states.langium",
-        "fileExtensions": [".sm"],
+        "id": "fefl",
+        "grammar": "src/fefl.langium",
+        "fileExtensions": [".fefl"],
         "textMate": {
-            "out": "../extension/syntaxes/states.tmLanguage.json"
+            "out": "../extension/syntaxes/fefl.tmLanguage.json"
         },
         "monarch": {
-            "out": "../extension/syntaxes/states.monarch.ts"
+            "out": "../extension/syntaxes/fefl.monarch.ts"
         }
     }],
     "out": "src/generated"

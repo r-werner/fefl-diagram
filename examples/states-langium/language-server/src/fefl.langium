@@ -1,4 +1,4 @@
-grammar States
+grammar Fefl
 
 entry LoxProgram:
     elements+=LoxElement*;
@@ -11,6 +11,7 @@ LoxElement:
     ForStatement |
     FunctionDeclaration |
     VariableDeclaration ';' |
+    ConstantDeclaration ';' |
     PrintStatement ';' |
     ReturnStatement ';' |
     Expression ';'
@@ -38,7 +39,11 @@ ExpressionBlock: '{'
 '}';
 
 VariableDeclaration returns NamedElement:
-    {infer VariableDeclaration} 'var' name=ID (':' type=TypeReference)? (assignment?='=' value=Expression)?
+    {infer VariableDeclaration} 'let' name=ID (':' type=TypeReference)? (assignment?='=' value=Expression)?
+;
+
+ConstantDeclaration returns NamedElement:
+    {infer ConstantDeclaration} 'const' name=ID (':' type=TypeReference)? assignment='=' value=Expression
 ;
 
 Expression:
@@ -107,7 +112,7 @@ BooleanExpression: value?='true' | 'false';
 NilExpression: value='nil';
 
 FunctionDeclaration:
-    'fun' name=ID '(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')' ':' returnType=TypeReference body=ExpressionBlock;
+    'function' name=ID '(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')' ':' returnType=TypeReference body=ExpressionBlock;
 
 Parameter: name=ID ':' type=TypeReference;
 
@@ -129,7 +134,7 @@ TypeReference: reference=[Class:ID]
 
 LambdaParameter: (name=ID ':')? type=TypeReference;
 
-type NamedElement = Parameter | FunctionDeclaration | VariableDeclaration | MethodMember | FieldMember | Class;
+type NamedElement = Parameter | FunctionDeclaration | VariableDeclaration | ConstantDeclaration | MethodMember | FieldMember | Class;
 
 hidden terminal WS: /\s+/;
 terminal ID: /[_a-zA-Z][\w_]*/;

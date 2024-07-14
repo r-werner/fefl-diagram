@@ -52,55 +52,55 @@ export function activate(context: vscode.ExtensionContext) {
         // Set up webview panel manager for freestyle webviews
         const webviewPanelManager = new LspWebviewPanelManager({
             extensionUri: context.extensionUri,
-            defaultDiagramType: 'states',
+            defaultDiagramType: 'fefl',
             languageClient,
-            supportedFileExtensions: ['.sm'],
+            supportedFileExtensions: ['.fefl'],
             localResourceRoots,
             createWebviewHtml,
             configureEndpoint
         });
-        registerDefaultCommands(webviewPanelManager, context, { extensionPrefix: 'states' });
-        registerLspEditCommands(webviewPanelManager, context, { extensionPrefix: 'states' });
+        registerDefaultCommands(webviewPanelManager, context, { extensionPrefix: 'fefl' });
+        registerLspEditCommands(webviewPanelManager, context, { extensionPrefix: 'fefl' });
     }
 
     if (diagramMode === 'editor') {
         // Set up webview editor associated with file type
         const webviewEditorProvider = new LspSprottyEditorProvider({
             extensionUri: context.extensionUri,
-            viewType: 'states',
+            viewType: 'fefl',
             languageClient,
-            supportedFileExtensions: ['.sm'],
+            supportedFileExtensions: ['.fefl'],
             localResourceRoots,
             createWebviewHtml,
             configureEndpoint
         });
         context.subscriptions.push(
-            vscode.window.registerCustomEditorProvider('states', webviewEditorProvider, {
+            vscode.window.registerCustomEditorProvider('fefl', webviewEditorProvider, {
                 webviewOptions: { retainContextWhenHidden: true }
             })
         );
-        registerDefaultCommands(webviewEditorProvider, context, { extensionPrefix: 'states' });
-        registerLspEditCommands(webviewEditorProvider, context, { extensionPrefix: 'states' });
+        registerDefaultCommands(webviewEditorProvider, context, { extensionPrefix: 'fefl' });
+        registerLspEditCommands(webviewEditorProvider, context, { extensionPrefix: 'fefl' });
     }
 
     if (diagramMode === 'view') {
         // Set up webview view shown in the side panel
         const webviewViewProvider = new LspSprottyViewProvider({
             extensionUri: context.extensionUri,
-            viewType: 'states',
+            viewType: 'fefl',
             languageClient,
-            supportedFileExtensions: ['.sm'],
+            supportedFileExtensions: ['.fefl'],
             openActiveEditor: true,
             messenger: new Messenger({ignoreHiddenViews: false}),
             localResourceRoots,
             createWebviewHtml
         });
         context.subscriptions.push(
-            vscode.window.registerWebviewViewProvider('states', webviewViewProvider, {
+            vscode.window.registerWebviewViewProvider('fefl', webviewViewProvider, {
                 webviewOptions: { retainContextWhenHidden: true }
             })
         );
-        registerDefaultCommands(webviewViewProvider, context, { extensionPrefix: 'states' });
+        registerDefaultCommands(webviewViewProvider, context, { extensionPrefix: 'fefl' });
         registerTextEditorSync(webviewViewProvider, context);
     }
 
@@ -133,9 +133,9 @@ function createLanguageClient(context: vscode.ExtensionContext): LanguageClient 
     // Options to control the language client
     const clientOptions: LanguageClientOptions = {
         documentSelector: [
-            { scheme: 'file', language: 'states' }, {
+            { scheme: 'file', language: 'fefl' }, {
                 scheme: 'vscode-notebook-cell', // only notebook cells
-                language: 'states'
+                language: 'fefl'
             }
         ],
         synchronize: {
@@ -146,8 +146,8 @@ function createLanguageClient(context: vscode.ExtensionContext): LanguageClient 
 
     // Create the language client and start the client.
     const languageClient = new LanguageClient(
-        'states',
-        'States',
+        'fefl',
+        'fefl',
         serverOptions,
         clientOptions
     );

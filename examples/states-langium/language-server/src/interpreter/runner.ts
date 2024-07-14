@@ -2,7 +2,7 @@
  * Copyright (c) 2024 Genielabs
  ********************************************************************************/
 import { AstNode, EmptyFileSystem, interruptAndCheck, LangiumDocument, MaybePromise, URI } from "langium";
-import { BinaryExpression, Expression, isBinaryExpression, isBooleanExpression, isClass, isExpression, isExpressionBlock, isForStatement, isFunctionDeclaration, isIfStatement, isMemberCall, isNilExpression, isNumberExpression, isParameter, isPrintStatement, isReturnStatement, isStringExpression, isUnaryExpression, isVariableDeclaration, isWhileStatement, LoxElement, LoxProgram, MemberCall }
+import { BinaryExpression, Expression, isBinaryExpression, isBooleanExpression, isClass, isConstantDeclaration, isExpression, isExpressionBlock, isForStatement, isFunctionDeclaration, isIfStatement, isMemberCall, isNilExpression, isNumberExpression, isParameter, isPrintStatement, isReturnStatement, isStringExpression, isUnaryExpression, isVariableDeclaration, isWhileStatement, LoxElement, LoxProgram, MemberCall }
     from "../generated/ast.js";
 import { createStatesServices } from "../states-module.js";
 import { v4 } from 'uuid';
@@ -157,7 +157,7 @@ async function runLoxElement(element: LoxElement, context: RunnerContext, return
             }
         }
         context.variables.leave();
-    } else if (isVariableDeclaration(element)) {
+    } else if (isVariableDeclaration(element) || isConstantDeclaration(element)) {
         const value = element.value ? await runExpression(element.value, context) : undefined;
         context.variables.push(element.name, value);
     } else if (isIfStatement(element)) {
@@ -253,6 +253,7 @@ async function runExpression(expression: Expression, context: RunnerContext): Pr
 }
 
 async function setExpressionValue(left: Expression, right: unknown, context: RunnerContext): Promise<unknown> {
+
     if (isMemberCall(left)) {
         if (left.explicitOperationCall) {
             // Just quietly return from operation call
@@ -273,6 +274,8 @@ async function setExpressionValue(left: Expression, right: unknown, context: Run
             (previous as any)[name] = right;
         } else if (isVariableDeclaration(ref)) {
             context.variables.set(left, name, right);
+        } else if (isConstantDeclaration(ref)) {
+            throw new AstNodeError(left, 'Cannot assign anything to constant');
         }
     } else {
         throw new AstNodeError(left, 'Cannot assign anything to constant');
@@ -291,7 +294,7 @@ async function runMemberCall(memberCall: MemberCall, context: RunnerContext): Pr
     let value: unknown;
     if (isFunctionDeclaration(ref)) {
         value = ref;
-    } else if (isVariableDeclaration(ref) || isParameter(ref)) {
+    } else if (isVariableDeclaration(ref) || isParameter(ref) || isConstantDeclaration(ref)) {
         value = context.variables.get(memberCall, ref.name);
     } else if (isClass(ref)) {
         throw new AstNodeError(memberCall, 'Classes are currently unsupported');

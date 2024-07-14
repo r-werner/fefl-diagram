@@ -23,7 +23,7 @@ export class FeflNotebookSerializer implements vscode.NotebookSerializer {
     public readonly label: string = 'Fefl Content Serializer';
 
     public async deserializeNotebook(data: Uint8Array, _token: vscode.CancellationToken): Promise<vscode.NotebookData> {
-        var contents = new TextDecoder().decode(data);    // convert to String to make JSON object
+        let contents = new TextDecoder().decode(data);    // convert to String to make JSON object
 
         // Read file contents
         let raw: RawNotebookData;

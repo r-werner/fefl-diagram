@@ -1,7 +1,7 @@
 {
-    "name": "states-language-server",
-    "displayName": "states-langium",
-    "description": "Language server for the States example",
+    "name": "fefl-language-server",
+    "displayName": "fefl-langium",
+    "description": "Language server for the Fefl Language",
     "version": "0.6.0",
     "private": true,
     "type": "module",

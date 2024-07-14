@@ -4,21 +4,21 @@
  ******************************************************************************/
 
 import type { LangiumSharedCoreServices, LangiumCoreServices, LangiumGeneratedCoreServices, LangiumGeneratedSharedCoreServices, LanguageMetaData, Module } from 'langium';
-import { StatesAstReflection } from './ast.js';
-import { StatesGrammar } from './grammar.js';
+import { FeflAstReflection } from './ast.js';
+import { FeflGrammar } from './grammar.js';
 
-export const StatesLanguageMetaData = {
-    languageId: 'states',
-    fileExtensions: ['.sm'],
+export const FeflLanguageMetaData = {
+    languageId: 'fefl',
+    fileExtensions: ['.fefl'],
     caseInsensitive: false
 } as const satisfies LanguageMetaData;
 
-export const StatesGeneratedSharedModule: Module<LangiumSharedCoreServices, LangiumGeneratedSharedCoreServices> = {
-    AstReflection: () => new StatesAstReflection()
+export const FeflGeneratedSharedModule: Module<LangiumSharedCoreServices, LangiumGeneratedSharedCoreServices> = {
+    AstReflection: () => new FeflAstReflection()
 };
 
-export const StatesGeneratedModule: Module<LangiumCoreServices, LangiumGeneratedCoreServices> = {
-    Grammar: () => StatesGrammar(),
-    LanguageMetaData: () => StatesLanguageMetaData,
+export const FeflGeneratedModule: Module<LangiumCoreServices, LangiumGeneratedCoreServices> = {
+    Grammar: () => FeflGrammar(),
+    LanguageMetaData: () => FeflLanguageMetaData,
     parser: {}
 };

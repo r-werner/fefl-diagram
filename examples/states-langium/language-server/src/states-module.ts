@@ -20,7 +20,7 @@ import { createDefaultModule, createDefaultSharedModule, PartialLangiumServices,
 import { LangiumSprottyServices, LangiumSprottySharedServices, SprottyDefaultModule, SprottyDiagramServices, SprottySharedModule } from 'langium-sprotty';
 import { DefaultElementFilter, ElkFactory, ElkLayoutEngine, IElementFilter, ILayoutConfigurator } from 'sprotty-elk/lib/elk-layout.js';
 import { StatesDiagramGenerator } from './diagram-generator.js';
-import { StatesGeneratedModule, StatesGeneratedSharedModule } from './generated/module.js';
+import { FeflGeneratedModule, FeflGeneratedSharedModule } from './generated/module.js';
 import { StatesLayoutConfigurator } from './layout-config.js';
 // import { registerValidationChecks, StatesValidator } from './states-validator.js';
 // import { StatesCodeActionProvider } from './code-actions.js';
@@ -99,12 +99,12 @@ export function createStatesServices(context: DefaultSharedModuleContext): {
 } {
     const shared = inject(
         createDefaultSharedModule(context),
-        StatesGeneratedSharedModule,
+        FeflGeneratedSharedModule,
         SprottySharedModule
     );
     const states = inject(
         createDefaultModule({ shared }),
-        StatesGeneratedModule,
+        FeflGeneratedModule,
         SprottyDefaultModule,
         StatesModule
     );

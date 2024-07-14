@@ -1,3 +1,6 @@
+/********************************************************************************
+ * Copyright (c) 2024 Genielabs
+ ********************************************************************************/
 import { isClassType, isFunctionType, isNilType, TypeDescription } from "./descriptions.js";
 import { getClassChain } from "./infer.js";
 

@@ -7,7 +7,7 @@
 import type { AstNode, Reference, ReferenceInfo, TypeMetaData } from 'langium';
 import { AbstractAstReflection } from 'langium';
 
-export const StatesTerminals = {
+export const FeflTerminals = {
     WS: /\s+/,
     ID: /[_a-zA-Z][\w_]*/,
     NUMBER: /[0-9]+(\.[0-9]+)?/,
@@ -40,7 +40,7 @@ export function isLoxElement(item: unknown): item is LoxElement {
     return reflection.isInstance(item, LoxElement);
 }
 
-export type NamedElement = Class | FieldMember | FunctionDeclaration | MethodMember | Parameter | VariableDeclaration;
+export type NamedElement = Class | ConstantDeclaration | FieldMember | FunctionDeclaration | MethodMember | Parameter | VariableDeclaration;
 
 export const NamedElement = 'NamedElement';
 
@@ -49,7 +49,7 @@ export function isNamedElement(item: unknown): item is NamedElement {
 }
 
 export interface BinaryExpression extends AstNode {
-    readonly $container: BinaryExpression | ExpressionBlock | ForStatement | IfStatement | LoxProgram | MemberCall | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
+    readonly $container: BinaryExpression | ConstantDeclaration | ExpressionBlock | ForStatement | IfStatement | LoxProgram | MemberCall | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
     readonly $type: 'BinaryExpression';
     left: Expression;
     operator: '!=' | '*' | '+' | '-' | '/' | '<' | '<=' | '=' | '==' | '>' | '>=' | 'and' | 'or';
@@ -63,7 +63,7 @@ export function isBinaryExpression(item: unknown): item is BinaryExpression {
 }
 
 export interface BooleanExpression extends AstNode {
-    readonly $container: BinaryExpression | ExpressionBlock | ForStatement | IfStatement | LoxProgram | MemberCall | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
+    readonly $container: BinaryExpression | ConstantDeclaration | ExpressionBlock | ForStatement | IfStatement | LoxProgram | MemberCall | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
     readonly $type: 'BooleanExpression';
     value: boolean;
 }
@@ -86,6 +86,21 @@ export const Class = 'Class';
 
 export function isClass(item: unknown): item is Class {
     return reflection.isInstance(item, Class);
+}
+
+export interface ConstantDeclaration extends AstNode {
+    readonly $container: ExpressionBlock | ForStatement | LoxProgram;
+    readonly $type: 'ConstantDeclaration';
+    assignment: '=';
+    name: string;
+    type?: TypeReference;
+    value: Expression;
+}
+
+export const ConstantDeclaration = 'ConstantDeclaration';
+
+export function isConstantDeclaration(item: unknown): item is ConstantDeclaration {
+    return reflection.isInstance(item, ConstantDeclaration);
 }
 
 export interface ExpressionBlock extends AstNode {
@@ -182,7 +197,7 @@ export function isLoxProgram(item: unknown): item is LoxProgram {
 }
 
 export interface MemberCall extends AstNode {
-    readonly $container: BinaryExpression | ExpressionBlock | ForStatement | IfStatement | LoxProgram | MemberCall | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
+    readonly $container: BinaryExpression | ConstantDeclaration | ExpressionBlock | ForStatement | IfStatement | LoxProgram | MemberCall | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
     readonly $type: 'MemberCall';
     arguments: Array<Expression>;
     element?: Reference<NamedElement>;
@@ -212,7 +227,7 @@ export function isMethodMember(item: unknown): item is MethodMember {
 }
 
 export interface NilExpression extends AstNode {
-    readonly $container: BinaryExpression | ExpressionBlock | ForStatement | IfStatement | LoxProgram | MemberCall | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
+    readonly $container: BinaryExpression | ConstantDeclaration | ExpressionBlock | ForStatement | IfStatement | LoxProgram | MemberCall | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
     readonly $type: 'NilExpression';
     value: 'nil';
 }
@@ -224,7 +239,7 @@ export function isNilExpression(item: unknown): item is NilExpression {
 }
 
 export interface NumberExpression extends AstNode {
-    readonly $container: BinaryExpression | ExpressionBlock | ForStatement | IfStatement | LoxProgram | MemberCall | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
+    readonly $container: BinaryExpression | ConstantDeclaration | ExpressionBlock | ForStatement | IfStatement | LoxProgram | MemberCall | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
     readonly $type: 'NumberExpression';
     value: number;
 }
@@ -273,7 +288,7 @@ export function isReturnStatement(item: unknown): item is ReturnStatement {
 }
 
 export interface StringExpression extends AstNode {
-    readonly $container: BinaryExpression | ExpressionBlock | ForStatement | IfStatement | LoxProgram | MemberCall | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
+    readonly $container: BinaryExpression | ConstantDeclaration | ExpressionBlock | ForStatement | IfStatement | LoxProgram | MemberCall | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
     readonly $type: 'StringExpression';
     value: string;
 }
@@ -285,7 +300,7 @@ export function isStringExpression(item: unknown): item is StringExpression {
 }
 
 export interface TypeReference extends AstNode {
-    readonly $container: FieldMember | FunctionDeclaration | LambdaParameter | MethodMember | Parameter | TypeReference | VariableDeclaration;
+    readonly $container: ConstantDeclaration | FieldMember | FunctionDeclaration | LambdaParameter | MethodMember | Parameter | TypeReference | VariableDeclaration;
     readonly $type: 'TypeReference';
     parameters: Array<LambdaParameter>;
     primitive?: 'boolean' | 'number' | 'string' | 'void';
@@ -300,7 +315,7 @@ export function isTypeReference(item: unknown): item is TypeReference {
 }
 
 export interface UnaryExpression extends AstNode {
-    readonly $container: BinaryExpression | ExpressionBlock | ForStatement | IfStatement | LoxProgram | MemberCall | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
+    readonly $container: BinaryExpression | ConstantDeclaration | ExpressionBlock | ForStatement | IfStatement | LoxProgram | MemberCall | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
     readonly $type: 'UnaryExpression';
     operator: '!' | '+' | '-';
     value: Expression;
@@ -340,11 +355,12 @@ export function isWhileStatement(item: unknown): item is WhileStatement {
     return reflection.isInstance(item, WhileStatement);
 }
 
-export type StatesAstType = {
+export type FeflAstType = {
     BinaryExpression: BinaryExpression
     BooleanExpression: BooleanExpression
     Class: Class
     ClassMember: ClassMember
+    ConstantDeclaration: ConstantDeclaration
     Expression: Expression
     ExpressionBlock: ExpressionBlock
     FieldMember: FieldMember
@@ -369,10 +385,10 @@ export type StatesAstType = {
     WhileStatement: WhileStatement
 }
 
-export class StatesAstReflection extends AbstractAstReflection {
+export class FeflAstReflection extends AbstractAstReflection {
 
     getAllTypes(): string[] {
-        return [BinaryExpression, BooleanExpression, Class, ClassMember, Expression, ExpressionBlock, FieldMember, ForStatement, FunctionDeclaration, IfStatement, LambdaParameter, LoxElement, LoxProgram, MemberCall, MethodMember, NamedElement, NilExpression, NumberExpression, Parameter, PrintStatement, ReturnStatement, StringExpression, TypeReference, UnaryExpression, VariableDeclaration, WhileStatement];
+        return [BinaryExpression, BooleanExpression, Class, ClassMember, ConstantDeclaration, Expression, ExpressionBlock, FieldMember, ForStatement, FunctionDeclaration, IfStatement, LambdaParameter, LoxElement, LoxProgram, MemberCall, MethodMember, NamedElement, NilExpression, NumberExpression, Parameter, PrintStatement, ReturnStatement, StringExpression, TypeReference, UnaryExpression, VariableDeclaration, WhileStatement];
     }
 
     protected override computeIsSubtype(subtype: string, supertype: string): boolean {
@@ -390,6 +406,11 @@ export class StatesAstReflection extends AbstractAstReflection {
             case FunctionDeclaration: {
                 return this.isSubtype(LoxElement, supertype) || this.isSubtype(NamedElement, supertype);
             }
+            case ConstantDeclaration:
+            case Parameter:
+            case VariableDeclaration: {
+                return this.isSubtype(NamedElement, supertype);
+            }
             case Expression:
             case ExpressionBlock:
             case ForStatement:
@@ -403,10 +424,6 @@ export class StatesAstReflection extends AbstractAstReflection {
             case FieldMember:
             case MethodMember: {
                 return this.isSubtype(ClassMember, supertype) || this.isSubtype(NamedElement, supertype);
-            }
-            case Parameter:
-            case VariableDeclaration: {
-                return this.isSubtype(NamedElement, supertype);
             }
             default: {
                 return false;
@@ -457,6 +474,17 @@ export class StatesAstReflection extends AbstractAstReflection {
                         { name: 'members', defaultValue: [] },
                         { name: 'name' },
                         { name: 'superClass' }
+                    ]
+                };
+            }
+            case ConstantDeclaration: {
+                return {
+                    name: ConstantDeclaration,
+                    properties: [
+                        { name: 'assignment' },
+                        { name: 'name' },
+                        { name: 'type' },
+                        { name: 'value' }
                     ]
                 };
             }
@@ -647,4 +675,4 @@ export class StatesAstReflection extends AbstractAstReflection {
     }
 }
 
-export const reflection = new StatesAstReflection();
+export const reflection = new FeflAstReflection();
