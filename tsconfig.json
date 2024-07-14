@@ -3,6 +3,7 @@
     "include": [
         "packages/*/src/**/*.ts",
         "examples/states-langium/*/src/**/*.ts",
+        "examples/states-langium/interpreter/**/*.ts",
         "examples/states-langium/*/src/**/*.tsx"
     ]
 }
